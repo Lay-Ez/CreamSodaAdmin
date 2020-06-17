@@ -4,14 +4,13 @@ import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
-data class MenuItem(val name: String,
-                    val ingredients: String,
-                    val description: String,
+data class MenuItem(var name: String,
+                    var ingredients: String,
+                    var description: String,
                     var imageUrl: String,
-                    val price: Int,
-                    val weight: Int,
-                    val tags: List<String>,
-                    @get: Exclude var itemType: MenuItemType) {
+                    var price: Int,
+                    var weight: Int,
+                    var tags: List<String>) {
 
     @get: Exclude
     var documentID = ""
@@ -19,21 +18,9 @@ data class MenuItem(val name: String,
     @ServerTimestamp
     var date: Date = Date()
 
-    //Needed for FireStore
+    //Needed for FireStore, do not delete
     constructor(): this("", "", "", "",
-        0, 0, listOf(), MenuItemType.HOT_DISH)
-}
-
-enum class MenuItemType{
-    HOT_DISH,
-    SALAD,
-    SOUP,
-    SIDE,
-    DESSERT,
-    SUSHI,
-    BURGER,
-    WOK_NOODLE,
-    BRUSCHETTA
+        0, 0, listOf())
 }
 
 

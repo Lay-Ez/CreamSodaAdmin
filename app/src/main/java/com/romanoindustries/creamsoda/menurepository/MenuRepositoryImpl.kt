@@ -2,87 +2,140 @@ package com.romanoindustries.creamsoda.menurepository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.CollectionReference
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.datamodel.MenuItem
-import com.romanoindustries.creamsoda.datamodel.MenuItemType
 import io.reactivex.rxjava3.core.Observable
-import java.net.ConnectException
+import io.reactivex.rxjava3.core.ObservableEmitter
 
-const val MENU_ITEMS = "menuItems"
-const val DISH_ITEMS = "items"
-const val HOT_DISH = "hotDish"
-const val SALAD = "salad"
-const val SOUP = "soup"
-const val SIDE = "side"
-const val DESSERT = "dessert"
-const val SUSHI = "sushi"
-const val BURGER = "burger"
-const val WOK_NOODLE = "wokNoodle"
-const val BRUSCHETTA = "bruschetta"
+const val MENU_ITEMS_COLLECTION = "menuItems"
 
 class MenuRepositoryImpl: MenuRepository {
 
     private val db = FirebaseFirestore.getInstance()
+    private val menuCollectionRef = db.collection("menu")
 
-    private val menuItemsMutable: MutableLiveData<List<MenuItem>> = MutableLiveData()
+    private val menuCategoriesMutable = MutableLiveData<List<MenuCategory>>()
+    override val menuCategories: LiveData<List<MenuCategory>> = menuCategoriesMutable
+
+    private val menuItemsMutable = MutableLiveData<List<MenuItem>>()
     override val menuItems: LiveData<List<MenuItem>> = menuItemsMutable
 
-    override fun insertMenuItem(menuItem: MenuItem): Observable<Int> {
+    override fun insertMenuCategory(menuCategory: MenuCategory): Observable<Int> {
+        return Observable.create { subscriber ->
+            val task = menuCollectionRef.document().set(menuCategory)
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun updateMenuCategory(menuCategory: MenuCategory): Observable<Int> {
         return Observable.create {subscriber ->
-            getMenuItemCollection(menuItem).document().set(menuItem)
-                .addOnSuccessListener {
-                    subscriber.onComplete()
+            val task = menuCollectionRef.document(menuCategory.documentId).set(menuCategory)
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun deleteMenuCategory(menuCategory: MenuCategory): Observable<Int> {
+        return Observable.create {subscriber ->
+            val task = menuCollectionRef.document(menuCategory.documentId).delete()
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun loadMenuCategories(): Observable<Int> {
+        return Observable.create { subscriber ->
+            menuCollectionRef
+                .addSnapshotListener{ querySnapshot, firestoreException ->
+                if (firestoreException != null) {
+                    subscriber.onError(firestoreException)
+                } else {
+                    querySnapshot?.let {query->
+                        val menuCategoryList = arrayListOf<MenuCategory>()
+                        for (documentSnapshot in query) {
+                            val menuCategory = documentSnapshot.toObject(MenuCategory::class.java)
+                            menuCategory.documentId = documentSnapshot.id
+                            menuCategoryList.add(menuCategory)
+                        }
+                        menuCategoriesMutable.value = menuCategoryList
+                        subscriber.onComplete()
+                    }
                 }
-                .addOnFailureListener {
-                    subscriber.onError(ConnectException("Couldn't insert menu item to database"))
-                }
-                .addOnCompleteListener {
-                    subscriber.onComplete()
+            }
+        }
+    }
+
+
+    override fun insertMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
+        return Observable.create {subscriber ->
+            val task = menuCollectionRef
+                .document(menuCategory.documentId)
+                .collection(MENU_ITEMS_COLLECTION)
+                .document()
+                .set(menuItem)
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun updateMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
+        return Observable.create {subscriber ->
+            val task = menuCollectionRef
+                .document(menuCategory.documentId)
+                .collection(MENU_ITEMS_COLLECTION)
+                .document(menuItem.documentID)
+                .set(menuItem)
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun deleteMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
+        return Observable.create {subscriber ->
+            val task = menuCollectionRef
+                .document(menuCategory.documentId)
+                .collection(MENU_ITEMS_COLLECTION)
+                .document(menuItem.documentID)
+                .delete()
+            addListenersToTask(task, subscriber)
+        }
+    }
+
+    override fun loadMenuItems(menuCategory: MenuCategory): Observable<Int> {
+        return Observable.create {subscriber ->
+            menuCollectionRef.document(menuCategory.documentId).collection(MENU_ITEMS_COLLECTION)
+                .addSnapshotListener { querySnapshot, firestoreException ->
+                    if (firestoreException != null) {
+                        subscriber.onError(firestoreException)
+                    } else {
+                        querySnapshot?.let { query ->
+                            val menuItemList = arrayListOf<MenuItem>()
+                            for (documentSnapshot in query) {
+                                val menuItem = documentSnapshot.toObject(MenuItem::class.java)
+                                menuItem.documentID = documentSnapshot.id
+                                menuItemList.add(menuItem)
+                            }
+                            menuItemsMutable.value = menuItemList
+                            subscriber.onComplete()
+                        }
+                    }
                 }
         }
     }
 
-    override fun updateMenuItem(menuItem: MenuItem): Observable<Int> {
-        TODO("Not yet implemented")
-    }
-
-    override fun loadMenuItems(menuItemType: MenuItemType): Observable<Int> {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteMenuItem(menuItem: MenuItem): Observable<Int> {
-        TODO("Not yet implemented")
-    }
-
-    private fun getMenuItemCollection(menuItem: MenuItem): CollectionReference {
-        val docName = when (menuItem.itemType) {
-            MenuItemType.HOT_DISH -> HOT_DISH
-            MenuItemType.SALAD -> SALAD
-            MenuItemType.SOUP -> SOUP
-            MenuItemType.SIDE -> SIDE
-            MenuItemType.DESSERT -> DESSERT
-            MenuItemType.SUSHI -> SUSHI
-            MenuItemType.BURGER -> BURGER
-            MenuItemType.WOK_NOODLE -> WOK_NOODLE
-            MenuItemType.BRUSCHETTA -> BRUSCHETTA
-        }
-        return db.collection(MENU_ITEMS).document(docName).collection(DISH_ITEMS)
+    private fun addListenersToTask(task: Task<Void>, subscriber: ObservableEmitter<Int>) {
+        task.addOnSuccessListener {
+            subscriber.onComplete()
+            }
+            .addOnCompleteListener {
+                subscriber.onComplete()
+            }
+            .addOnFailureListener { e ->
+                subscriber.onError(e)
+            }
+            .addOnCanceledListener {
+                subscriber.onComplete()
+            }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
