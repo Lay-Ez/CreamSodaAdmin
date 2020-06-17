@@ -13,7 +13,6 @@ interface MenuRepository {
     fun insertMenuCategory(menuCategory: MenuCategory): Observable<Int>
     fun updateMenuCategory(menuCategory: MenuCategory): Observable<Int>
     fun deleteMenuCategory(menuCategory: MenuCategory): Observable<Int>
-    fun loadMenuCategories(): Observable<Int>
 
     fun insertMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int>
     fun updateMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int>
