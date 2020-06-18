@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CreamSoda</string>
+
+    <!-- Bottom navigation-->
+    <string name="menu_bottom_navigation">Food</string>
+    <string name="drinks_bottom_navigation">Drinks</string>
+    <string name="hookahs_bottom_navigation">Hookah</string>
+
 </resources>

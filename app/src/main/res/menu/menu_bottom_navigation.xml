@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/food"
+        android:menuCategory="secondary"
+        android:title="@string/menu_bottom_navigation" />
+    <item
+        android:id="@+id/drinks"
+        android:menuCategory="secondary"
+        android:title="@string/drinks_bottom_navigation" />
+    <item
+        android:id="@+id/hookah"
+        android:menuCategory="secondary"
+        android:title="@string/hookahs_bottom_navigation" />
+</menu>

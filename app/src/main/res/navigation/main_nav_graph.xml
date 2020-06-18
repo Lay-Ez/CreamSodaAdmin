@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/food">
+
+    <fragment
+        android:id="@+id/food"
+        android:name="com.romanoindustries.creamsoda.foodsection.FoodFragment"
+        android:label="fragment_food"
+        tools:layout="@layout/fragment_food" />
+
+    <fragment
+        android:id="@+id/drinks"
+        android:name="com.romanoindustries.creamsoda.drinkssection.DrinksFragment"
+        android:label="fragment_drinks"
+        tools:layout="@layout/fragment_drinks" />
+
+    <fragment
+        android:id="@+id/hookah"
+        android:name="com.romanoindustries.creamsoda.hookahsection.HookahFragment"
+        android:label="fragment_hookah"
+        tools:layout="@layout/fragment_hookah" />
+</navigation>
