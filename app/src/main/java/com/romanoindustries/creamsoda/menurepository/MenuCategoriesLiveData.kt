@@ -6,10 +6,14 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import javax.inject.Inject
+import javax.inject.Named
 
-class MenuCategoriesLiveData @Inject constructor(): LiveData<List<MenuCategory>>() {
+open class MenuCategoriesLiveData
+    @Inject constructor
+    ( @Named("menu_collection_root_name") rootCollectionName: String):
+    LiveData<List<MenuCategory>>() {
 
-    private val menuCollectionRef = FirebaseFirestore.getInstance().collection(MENU_COLLECTION)
+    private val menuCollectionRef = FirebaseFirestore.getInstance().collection(rootCollectionName)
 
     override fun onActive() {
         menuCollectionRef

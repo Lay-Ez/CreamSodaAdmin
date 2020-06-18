@@ -6,25 +6,26 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.datamodel.MenuItem
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.CompletableEmitter
 import javax.inject.Inject
+import javax.inject.Named
 
 const val MENU_ITEMS_COLLECTION = "menuItems"
-const val MENU_COLLECTION = "menu"
 
-class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategoriesLiveData): MenuRepository {
+open class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategoriesLiveData,
+        @Named("menu_collection_root_name") rootCollectionName: String): MenuRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val menuCollectionRef = db.collection(MENU_COLLECTION)
+    private val menuCollectionRef = db.collection(rootCollectionName)
 
     override val menuCategories: LiveData<List<MenuCategory>> = menuCategoriesLiveData
 
     private val menuItemsMutable = MutableLiveData<List<MenuItem>>()
     override val menuItems: LiveData<List<MenuItem>> = menuItemsMutable
 
-    override fun insertMenuCategory(menuCategory: MenuCategory): Observable<Int> {
-        return Observable.create { subscriber ->
+    override fun insertMenuCategory(menuCategory: MenuCategory): Completable {
+        return Completable.create { subscriber ->
             val task = menuCollectionRef
                 .document()
                 .set(menuCategory)
@@ -32,8 +33,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun updateMenuCategory(menuCategory: MenuCategory): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun updateMenuCategory(menuCategory: MenuCategory): Completable {
+        return Completable.create {subscriber ->
             val task = menuCollectionRef
                 .document(menuCategory.documentId)
                 .set(menuCategory)
@@ -41,8 +42,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun deleteMenuCategory(menuCategory: MenuCategory): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun deleteMenuCategory(menuCategory: MenuCategory): Completable {
+        return Completable.create {subscriber ->
             val task = menuCollectionRef
                 .document(menuCategory.documentId)
                 .delete()
@@ -50,8 +51,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun insertMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun insertMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Completable {
+        return Completable.create {subscriber ->
             val task = menuCollectionRef
                 .document(menuCategory.documentId)
                 .collection(MENU_ITEMS_COLLECTION)
@@ -61,8 +62,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun updateMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun updateMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Completable {
+        return Completable.create {subscriber ->
             val task = menuCollectionRef
                 .document(menuCategory.documentId)
                 .collection(MENU_ITEMS_COLLECTION)
@@ -72,8 +73,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun deleteMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun deleteMenuItem(menuCategory: MenuCategory, menuItem: MenuItem): Completable {
+        return Completable.create {subscriber ->
             val task = menuCollectionRef
                 .document(menuCategory.documentId)
                 .collection(MENU_ITEMS_COLLECTION)
@@ -83,8 +84,8 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    override fun loadMenuItems(menuCategory: MenuCategory): Observable<Int> {
-        return Observable.create {subscriber ->
+    override fun loadMenuItems(menuCategory: MenuCategory): Completable {
+        return Completable.create {subscriber ->
             menuCollectionRef.document(menuCategory.documentId).collection(MENU_ITEMS_COLLECTION)
                 .addSnapshotListener { querySnapshot, firestoreException ->
                     if (firestoreException != null) {
@@ -105,7 +106,7 @@ class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategor
         }
     }
 
-    private fun addListenersToTask(task: Task<Void>, subscriber: ObservableEmitter<Int>) {
+    private fun addListenersToTask(task: Task<Void>, subscriber: CompletableEmitter) {
         task.addOnSuccessListener {
             subscriber.onComplete()
             }
