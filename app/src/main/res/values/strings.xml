@@ -6,4 +6,7 @@
     <string name="drinks_bottom_navigation">Drinks</string>
     <string name="hookahs_bottom_navigation">Hookah</string>
 
+    <string name="food_toolbar_title">Food</string>
+    <string name="drinks_toolbar_title">Drinks</string>
+    <string name="hookah_toolbar_title">Hookah</string>
 </resources>
