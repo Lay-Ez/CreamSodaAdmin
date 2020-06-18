@@ -9,11 +9,11 @@ import javax.inject.Named
 abstract class MenuRepositoryModule {
 
     @Binds
-    @Named("menu_repo")
+    @Named(MENU_REPO_NAME)
     abstract fun bindMenuRepository(menuRepositoryImpl: MenuRepositoryImpl): MenuRepository
 
     @Binds
-    @Named("drinks_repo")
+    @Named(DRINKS_REPO_NAME)
     abstract fun bindDrinksRepository(drinksRepository: DrinksRepository): MenuRepository
 
 

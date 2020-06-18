@@ -12,6 +12,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val MENU_ITEMS_COLLECTION = "menuItems"
+const val MENU_REPO_NAME = "menu_repo"
+const val DRINKS_REPO_NAME = "drinks_repo"
 
 open class MenuRepositoryImpl @Inject constructor(menuCategoriesLiveData: MenuCategoriesLiveData,
         @Named("menu_collection_root_name") rootCollectionName: String): MenuRepository {
