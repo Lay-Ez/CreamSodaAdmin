@@ -1,20 +1,21 @@
 package com.romanoindustries.creamsoda
 
-import com.romanoindustries.creamsoda.menurepository.DRINKS_REPO_NAME
-import com.romanoindustries.creamsoda.menurepository.MENU_REPO_NAME
-import com.romanoindustries.creamsoda.menurepository.MenuRepository
-import com.romanoindustries.creamsoda.menurepository.MenuRepositoryModule
+import com.google.firebase.storage.StorageReference
+import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
+import com.romanoindustries.creamsoda.menurepository.*
 import dagger.Component
 import javax.inject.Named
 
 @Component(modules = [MenuRepositoryModule::class])
 interface RepositoryComponent {
 
-    @Named(MENU_REPO_NAME)
+    @Named(FOOD_REPO_NAME)
     fun getMenuRepository(): MenuRepository
 
     @Named(DRINKS_REPO_NAME)
     fun getDrinksRepository(): MenuRepository
 
-    fun inject(mainActivity: MainActivity)
+    fun getImagesStorageReference(): StorageReference
+
+    fun inject(categoriesViewModel: CategoriesViewModel)
 }

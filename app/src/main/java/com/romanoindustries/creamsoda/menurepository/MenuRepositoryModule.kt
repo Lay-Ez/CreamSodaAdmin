@@ -1,5 +1,7 @@
 package com.romanoindustries.creamsoda.menurepository
 
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -9,7 +11,7 @@ import javax.inject.Named
 abstract class MenuRepositoryModule {
 
     @Binds
-    @Named(MENU_REPO_NAME)
+    @Named(FOOD_REPO_NAME)
     abstract fun bindMenuRepository(menuRepositoryImpl: MenuRepositoryImpl): MenuRepository
 
     @Binds
@@ -25,5 +27,10 @@ abstract class MenuRepositoryModule {
         @Provides
         @Named("drinks_collection_root_name")
         fun provideDrinksCollectionRootName(): String  = "drinks"
+
+        @Provides
+        fun provideImageStorageReference(): StorageReference {
+            return FirebaseStorage.getInstance().getReference("images")
+        }
     }
 }

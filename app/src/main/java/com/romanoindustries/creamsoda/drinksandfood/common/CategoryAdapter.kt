@@ -1,4 +1,4 @@
-package com.romanoindustries.creamsoda.foodsection
+package com.romanoindustries.creamsoda.drinksandfood.common
 
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +20,9 @@ class CategoryAdapter(var menuCategories: List<MenuCategory>): RecyclerView.Adap
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.category_list_item, parent, false)
-        return CategoryViewHolder(view)
+        return CategoryViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int = menuCategories.size
