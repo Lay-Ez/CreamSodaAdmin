@@ -9,4 +9,11 @@
     <string name="food_toolbar_title">Food</string>
     <string name="drinks_toolbar_title">Drinks</string>
     <string name="hookah_toolbar_title">Hookah</string>
+
+    <!-- New category activity -->
+    <string name="save_menu_item">Save</string>
+    <string name="toolbar_title_new_category">New category</string>
+    <string name="category_name_hint">Name</string>
+    <string name="category_description_hint">Description</string>
+
 </resources>
