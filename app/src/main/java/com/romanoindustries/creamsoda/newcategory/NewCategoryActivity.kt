@@ -5,8 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.webkit.MimeTypeMap
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -15,9 +18,10 @@ import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.RepositoryComponent
 import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_new_category.*
 import kotlinx.android.synthetic.main.activity_new_category_inner.*
-import javax.inject.Inject
 
 const val CATEGORY_TYPE_KEY = "category_type"
 const val CATEGORY_FOOD = "food"
@@ -28,6 +32,7 @@ class NewCategoryActivity : AppCompatActivity() {
 
     lateinit var repositoryComponent: RepositoryComponent
     lateinit var viewModel: NewCategoryViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +40,26 @@ class NewCategoryActivity : AppCompatActivity() {
         repositoryComponent = (application as MyApp).repositoryComponent
         repositoryComponent.inject(this)
         setupViewModel(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
+    override fun onResume() {
+        super.onResume()
         setupListeners()
+        text_view_name.text = edit_text_name.text
     }
 
     private fun setupListeners() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        image_button_add_photo.setOnClickListener { openImagePicker() }
+        val dispose = getNameChanges().subscribe {
+            text_view_name.text = it
+            text_input_layout_name.error = null
+        }
+        compositeDisposable.add(dispose)
     }
 
     private fun setupViewModel(intent: Intent) {
@@ -90,6 +109,19 @@ class NewCategoryActivity : AppCompatActivity() {
             type = "image/*"
             action = Intent.ACTION_GET_CONTENT
             startActivityForResult(this, PICK_IMAGE_REQUEST)
+        }
+    }
+
+    private fun getNameChanges(): Observable<String> {
+        return Observable.create {subscriber ->
+            edit_text_name.addTextChangedListener( object: TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    subscriber.onNext(s.toString())
+                }
+            })
         }
     }
 
