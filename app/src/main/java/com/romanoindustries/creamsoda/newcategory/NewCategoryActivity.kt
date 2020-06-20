@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -55,6 +56,33 @@ class NewCategoryActivity : AppCompatActivity() {
         viewModel.imageUrl.observe(this, Observer {url ->
             Picasso.get().load(url).into(image_view_preview)
         })
+        viewModel.isLoading.observe(this, Observer { uploading ->
+            if (uploading) {
+                displayLoadingState()
+            } else {
+                displayDefaultState()
+            }
+        })
+
+        viewModel.uploadProgress.observe(this, Observer {progress ->
+            if (progress <= 10) {
+                progress_bar_upload.progress = 10
+            } else {
+                progress_bar_upload.progress = progress
+            }
+        })
+    }
+
+    private fun displayLoadingState() {
+        progress_bar_upload.visibility = View.VISIBLE
+        image_button_add_photo.setImageResource(R.drawable.ic_black_clear_24)
+        image_button_add_photo.setOnClickListener { viewModel.cancelImageUpload() }
+    }
+
+    private fun displayDefaultState() {
+        progress_bar_upload.visibility = View.INVISIBLE
+        image_button_add_photo.setImageResource(R.drawable.ic_black_add_a_photo_24)
+        image_button_add_photo.setOnClickListener { openImagePicker() }
     }
 
     private fun openImagePicker() {

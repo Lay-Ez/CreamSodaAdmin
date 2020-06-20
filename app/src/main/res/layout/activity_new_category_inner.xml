@@ -42,20 +42,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <ImageButton
-                android:id="@+id/image_button_add_photo"
-                style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/btn_ripple"
-                android:elevation="0dp"
-                android:padding="12dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/image_view_preview"
-                app:srcCompat="@drawable/ic_black_add_a_photo_24" />
-
             <TextView
                 android:id="@+id/text_view_name"
                 android:layout_width="0dp"
@@ -69,6 +55,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Bread crumbs" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_upload"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDuration="500"
+                android:progress="75"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/image_button_add_photo"
+                app:layout_constraintEnd_toEndOf="@+id/image_button_add_photo"
+                app:layout_constraintStart_toStartOf="@+id/image_button_add_photo"
+                app:layout_constraintTop_toTopOf="@+id/image_button_add_photo" />
+
+            <ImageButton
+                android:id="@+id/image_button_add_photo"
+                style="@android:style/Widget.Material.ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/btn_ripple"
+                android:elevation="0dp"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/image_view_preview"
+                app:srcCompat="@drawable/ic_black_add_a_photo_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
