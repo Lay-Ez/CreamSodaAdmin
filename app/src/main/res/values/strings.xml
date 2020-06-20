@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CreamSoda</string>
 
+    <string name="unknown_error_occurred">Error occurred</string>
+
     <!-- Bottom navigation-->
     <string name="menu_bottom_navigation">Food</string>
     <string name="drinks_bottom_navigation">Drinks</string>
