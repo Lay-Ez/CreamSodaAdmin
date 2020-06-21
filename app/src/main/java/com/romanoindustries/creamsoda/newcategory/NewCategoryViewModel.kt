@@ -29,7 +29,7 @@ const val STATE_DEFAULT = 0
 const val STATE_SAVING = 1
 const val STATE_SAVED = 2
 
-class NewCategoryViewModel : ViewModel() {
+open class NewCategoryViewModel : ViewModel() {
 
     @Inject
     lateinit var storageReference: StorageReference

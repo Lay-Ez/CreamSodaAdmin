@@ -34,7 +34,6 @@ class NewCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_category)
         repositoryComponent = (application as MyApp).repositoryComponent
-        repositoryComponent.inject(this)
         setupViewModel(intent)
     }
 
@@ -51,6 +50,7 @@ class NewCategoryActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        viewModel.imageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }

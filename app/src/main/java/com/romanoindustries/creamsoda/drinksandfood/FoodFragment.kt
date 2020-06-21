@@ -11,15 +11,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoryAdapter
+import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
+import com.romanoindustries.creamsoda.editcategory.EditCategoryActivity
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_TYPE_KEY
 import com.romanoindustries.creamsoda.newcategory.NewCategoryActivity
 
-class FoodFragment : Fragment() {
+class FoodFragment : Fragment(), CategoryAdapter.CategoryClickListener {
+    private val TAG = "FoodFragment"
 
     lateinit var viewModel: CategoriesViewModel
     lateinit var fab: FloatingActionButton
@@ -45,9 +49,18 @@ class FoodFragment : Fragment() {
         }
     }
 
+    override fun onCategoryEditClicked(itemPosition: Int) {
+        val clickedCategory = adapter.menuCategories[itemPosition]
+        val categorySerialized = Gson().toJson(clickedCategory)
+        val intent = (Intent(requireContext(), EditCategoryActivity::class.java))
+        intent.putExtra(CATEGORY_TYPE_KEY, CATEGORY_FOOD)
+        intent.putExtra(CATEGORY_OBJECT_KEY, categorySerialized)
+        startActivity(intent)
+    }
+
     private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recycler_view)
-        adapter = CategoryAdapter(arrayListOf())
+        adapter = CategoryAdapter(arrayListOf(), this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         viewModel = ViewModelProvider(requireActivity()).get(CategoriesViewModel::class.java)

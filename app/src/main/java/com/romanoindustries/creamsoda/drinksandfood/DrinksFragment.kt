@@ -15,12 +15,13 @@ import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoryAdapter
+import com.romanoindustries.creamsoda.editcategory.EditCategoryActivity
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_DRINKS
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_TYPE_KEY
 import com.romanoindustries.creamsoda.newcategory.NewCategoryActivity
 
-class DrinksFragment : Fragment() {
+class DrinksFragment : Fragment(), CategoryAdapter.CategoryClickListener {
 
     lateinit var viewModel: CategoriesViewModel
     lateinit var fab: FloatingActionButton
@@ -46,9 +47,15 @@ class DrinksFragment : Fragment() {
         }
     }
 
+    override fun onCategoryEditClicked(itemPosition: Int) {
+        with(Intent(requireContext(), EditCategoryActivity::class.java)) {
+            startActivity(this)
+        }
+    }
+
     private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recycler_view)
-        adapter = CategoryAdapter(arrayListOf())
+        adapter = CategoryAdapter(arrayListOf(), this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         viewModel = ViewModelProvider(requireActivity()).get(CategoriesViewModel::class.java)

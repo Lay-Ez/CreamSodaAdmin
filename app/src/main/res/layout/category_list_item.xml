@@ -46,6 +46,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/image_view"
                 tools:text="Bread crumbs" />
+
+            <ImageButton
+                android:id="@+id/image_btn_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_ripple"
+                android:padding="6dp"
+                app:layout_constraintEnd_toEndOf="@+id/image_view"
+                app:layout_constraintTop_toTopOf="@+id/image_view"
+                app:srcCompat="@drawable/ic_black_edit_18" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

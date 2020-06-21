@@ -2,6 +2,7 @@ package com.romanoindustries.creamsoda
 
 import com.google.firebase.storage.StorageReference
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
+import com.romanoindustries.creamsoda.editcategory.EditCategoryViewModel
 import com.romanoindustries.creamsoda.menurepository.*
 import com.romanoindustries.creamsoda.newcategory.NewCategoryActivity
 import com.romanoindustries.creamsoda.newcategory.NewCategoryViewModel
@@ -22,6 +23,8 @@ interface RepositoryComponent {
     fun inject(categoriesViewModel: CategoriesViewModel)
 
     fun inject(newCategoryViewModel: NewCategoryViewModel)
+
+    fun inject(editCategoryViewModel: EditCategoryViewModel)
 
     fun inject(newCategoryActivity: NewCategoryActivity)
 }
