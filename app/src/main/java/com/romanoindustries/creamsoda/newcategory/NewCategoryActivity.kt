@@ -26,8 +26,8 @@ const val PICK_IMAGE_REQUEST = 1
 
 class NewCategoryActivity : AppCompatActivity() {
 
-    lateinit var repositoryComponent: RepositoryComponent
-    lateinit var viewModel: NewCategoryViewModel
+    private lateinit var repositoryComponent: RepositoryComponent
+    private lateinit var viewModel: NewCategoryViewModel
     private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {

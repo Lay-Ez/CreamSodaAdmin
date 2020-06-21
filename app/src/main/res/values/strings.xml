@@ -23,4 +23,8 @@
     <string name="error_empty_name">Name cannot be empty</string>
     <string name="error_saving_category">Error saving category</string>
 
+    <!-- Edit category activity -->
+    <string name="delete_menu_item">Delete</string>
+    <string name="edit_category_toolbar_title">Edit category</string>
+
 </resources>
