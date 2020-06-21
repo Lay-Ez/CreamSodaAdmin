@@ -2,18 +2,14 @@ package com.romanoindustries.creamsoda.newcategory
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.webkit.MimeTypeMap
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.storage.StorageReference
 import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.RepositoryComponent
@@ -53,8 +49,23 @@ class NewCategoryActivity : AppCompatActivity() {
         text_view_name.text = edit_text_name.text
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        viewModel.cancelImageUpload()
+        viewModel.deleteCurrentImage()
+    }
+
     private fun setupListeners() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.setOnMenuItemClickListener {menuItem ->
+            when(menuItem.itemId) {
+                R.id.mnu_item_save -> {
+                    onSaveClicked()
+                    true
+                }
+                else -> false
+            }
+        }
         val dispose = getNameChanges().subscribe {
             text_view_name.text = it
             text_input_layout_name.error = null
@@ -62,11 +73,16 @@ class NewCategoryActivity : AppCompatActivity() {
         compositeDisposable.add(dispose)
     }
 
+    private fun onSaveClicked() {
+        viewModel.saveCategory(edit_text_name.text.toString().trim(),
+            edit_text_description.text.toString().trim())
+    }
+
     private fun setupViewModel(intent: Intent) {
         viewModel = ViewModelProvider(this).get(NewCategoryViewModel::class.java)
         val category = intent.getStringExtra(CATEGORY_TYPE_KEY)
         if (category == null) {
-            Snackbar.make(toolbar, R.string.unknown_error_occurred, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(toolbar, R.string.unknown_error_occurred, Snackbar.LENGTH_LONG).show()
             onBackPressed()
         } else {
             repositoryComponent.inject(viewModel)
@@ -77,9 +93,9 @@ class NewCategoryActivity : AppCompatActivity() {
         })
         viewModel.isLoading.observe(this, Observer { uploading ->
             if (uploading) {
-                displayLoadingState()
+                displayUploadingImageState()
             } else {
-                displayDefaultState()
+                displayDefaultImageState()
             }
         })
 
@@ -90,15 +106,43 @@ class NewCategoryActivity : AppCompatActivity() {
                 progress_bar_upload.progress = progress
             }
         })
+
+        viewModel.state.observe(this, Observer {state ->
+            when (state) {
+                STATE_DEFAULT -> progress_bar_save.visibility = View.INVISIBLE
+                STATE_SAVING -> progress_bar_save.visibility = View.VISIBLE
+                STATE_SAVED -> finish()
+            }
+        })
+
+        val dispose = viewModel.errorChannel.subscribe {errorCode ->
+            displayError(errorCode)
+        }
+        compositeDisposable.add(dispose)
     }
 
-    private fun displayLoadingState() {
+    private fun displayError(errorCode: Int) {
+        var msgResource: Int
+        when (errorCode) {
+            ERROR_UPLOADING_IMAGE -> msgResource = R.string.error_uploading_image
+            ERROR_IMAGE_NOT_LOADED -> msgResource =  R.string.error_image_not_uploaded
+            ERROR_SAVING_CATEGORY -> msgResource =  R.string.error_saving_category
+            ERROR_EMPTY_NAME -> {
+                text_input_layout_name.error = getString(R.string.error_empty_name)
+                return
+            }
+            else -> msgResource =  R.string.unknown_error_occurred
+        }
+        Snackbar.make(toolbar, msgResource, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun displayUploadingImageState() {
         progress_bar_upload.visibility = View.VISIBLE
         image_button_add_photo.setImageResource(R.drawable.ic_black_clear_24)
         image_button_add_photo.setOnClickListener { viewModel.cancelImageUpload() }
     }
 
-    private fun displayDefaultState() {
+    private fun displayDefaultImageState() {
         progress_bar_upload.visibility = View.INVISIBLE
         image_button_add_photo.setImageResource(R.drawable.ic_black_add_a_photo_24)
         image_button_add_photo.setOnClickListener { openImagePicker() }

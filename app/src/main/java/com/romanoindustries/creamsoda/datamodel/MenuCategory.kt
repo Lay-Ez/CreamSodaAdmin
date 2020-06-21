@@ -6,7 +6,8 @@ import java.util.*
 
 data class MenuCategory(var name: String,
                         var description: String,
-                        var imageUrl: String) {
+                        var imageUrl: String,
+                        var imageName: String) {
 
     @get: Exclude
     var documentId = ""
@@ -15,5 +16,5 @@ data class MenuCategory(var name: String,
     var date: Date = Date()
 
     //Needed for FireStore, do not delete
-    constructor(): this("", "", "")
+    constructor(): this("", "", "", "")
 }

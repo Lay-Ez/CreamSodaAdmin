@@ -8,6 +8,7 @@ data class MenuItem(var name: String,
                     var ingredients: String,
                     var description: String,
                     var imageUrl: String,
+                    var imageName: String,
                     var price: Int,
                     var weight: Int,
                     var tags: List<String>) {
@@ -19,7 +20,7 @@ data class MenuItem(var name: String,
     var date: Date = Date()
 
     //Needed for FireStore, do not delete
-    constructor(): this("", "", "", "",
+    constructor(): this("", "", "", "", "",
         0, 0, listOf())
 }
 

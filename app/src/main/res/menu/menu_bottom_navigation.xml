@@ -3,14 +3,17 @@
 
     <item
         android:id="@+id/food"
+        android:icon="@drawable/ic_food"
         android:menuCategory="secondary"
         android:title="@string/menu_bottom_navigation" />
     <item
         android:id="@+id/drinks"
+        android:icon="@drawable/ic_drink"
         android:menuCategory="secondary"
         android:title="@string/drinks_bottom_navigation" />
     <item
         android:id="@+id/hookah"
+        android:icon="@drawable/ic_hookah"
         android:menuCategory="secondary"
         android:title="@string/hookahs_bottom_navigation" />
 </menu>
