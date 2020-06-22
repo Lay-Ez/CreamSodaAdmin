@@ -9,17 +9,38 @@
         android:id="@+id/food"
         android:name="com.romanoindustries.creamsoda.drinksandfood.FoodFragment"
         android:label="fragment_food"
-        tools:layout="@layout/fragment_food" />
+        tools:layout="@layout/fragment_food" >
+        <action
+            android:id="@+id/action_food_to_category"
+            app:destination="@id/category"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
 
     <fragment
         android:id="@+id/drinks"
         android:name="com.romanoindustries.creamsoda.drinksandfood.DrinksFragment"
         android:label="fragment_drinks"
-        tools:layout="@layout/fragment_drinks" />
+        tools:layout="@layout/fragment_drinks" >
+        <action
+            android:id="@+id/action_drinks_to_category"
+            app:destination="@id/category"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
 
     <fragment
         android:id="@+id/hookah"
         android:name="com.romanoindustries.creamsoda.hookahsection.HookahFragment"
         android:label="fragment_hookah"
         tools:layout="@layout/fragment_hookah" />
+    <fragment
+        android:id="@+id/category"
+        android:name="com.romanoindustries.creamsoda.viewcategory.ViewCategoryFragment"
+        android:label="fragment_view_category"
+        tools:layout="@layout/fragment_view_category" />
 </navigation>

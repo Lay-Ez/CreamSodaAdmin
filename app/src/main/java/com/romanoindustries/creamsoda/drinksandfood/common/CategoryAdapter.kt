@@ -42,12 +42,14 @@ class CategoryAdapter(var menuCategories: List<MenuCategory>, val clickListener:
             textViewName.text = menuCategory.name
             Picasso.get().load(menuCategory.imageUrl).into(imageView)
             btnEdit.setOnClickListener { clickListener.onCategoryEditClicked(adapterPosition) }
+            imageView.setOnClickListener { clickListener.onCategoryClicked(adapterPosition) }
         }
 
     }
 
     interface CategoryClickListener {
         fun onCategoryEditClicked(itemPosition: Int)
+        fun onCategoryClicked(itemPosition: Int)
     }
 }
 
