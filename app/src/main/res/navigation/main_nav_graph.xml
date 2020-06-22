@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_hookah" />
     <fragment
         android:id="@+id/category"
-        android:name="com.romanoindustries.creamsoda.viewcategory.ViewCategoryFragment"
+        android:name="com.romanoindustries.creamsoda.viewcategory.ViewMenuItemsFragment"
         android:label="fragment_view_category"
         tools:layout="@layout/fragment_view_category" >
         <argument
