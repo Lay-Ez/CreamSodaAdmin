@@ -42,5 +42,12 @@
         android:id="@+id/category"
         android:name="com.romanoindustries.creamsoda.viewcategory.ViewCategoryFragment"
         android:label="fragment_view_category"
-        tools:layout="@layout/fragment_view_category" />
+        tools:layout="@layout/fragment_view_category" >
+        <argument
+            android:name="category_type"
+            app:argType="string" />
+        <argument
+            android:name="category_key"
+            app:argType="string" />
+    </fragment>
 </navigation>

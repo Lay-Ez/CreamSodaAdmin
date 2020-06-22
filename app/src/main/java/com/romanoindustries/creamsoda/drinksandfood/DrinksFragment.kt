@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -14,11 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.Gson
 import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
+import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoryAdapter
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
 import com.romanoindustries.creamsoda.editcategory.EditCategoryActivity
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_DRINKS
+import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_TYPE_KEY
 import com.romanoindustries.creamsoda.newcategory.NewCategoryActivity
 import kotlinx.android.synthetic.main.fragment_drinks.*
@@ -58,7 +61,9 @@ class DrinksFragment : Fragment(), CategoryAdapter.CategoryClickListener {
     }
 
     override fun onCategoryClicked(itemPosition: Int) {
-        navController.navigate(R.id.action_drinks_to_category)
+        val bundle = bundleOf(CATEGORY_TYPE_KEY to CATEGORY_DRINKS,
+            CATEGORY_OBJECT_KEY to Gson().toJson(adapter.menuCategories[itemPosition], MenuCategory::class.java))
+        navController.navigate(R.id.action_drinks_to_category, bundle)
     }
 
     private fun setupRecyclerView() {
