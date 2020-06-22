@@ -11,10 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoriesViewModel
 import com.romanoindustries.creamsoda.drinksandfood.common.CategoryAdapter
+import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
 import com.romanoindustries.creamsoda.editcategory.EditCategoryActivity
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_DRINKS
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
@@ -48,9 +50,12 @@ class DrinksFragment : Fragment(), CategoryAdapter.CategoryClickListener {
     }
 
     override fun onCategoryEditClicked(itemPosition: Int) {
-        with(Intent(requireContext(), EditCategoryActivity::class.java)) {
-            startActivity(this)
-        }
+        val clickedCategory = adapter.menuCategories[itemPosition]
+        val categorySerialized = Gson().toJson(clickedCategory)
+        val intent = (Intent(requireContext(), EditCategoryActivity::class.java))
+        intent.putExtra(CATEGORY_TYPE_KEY, CATEGORY_DRINKS)
+        intent.putExtra(CATEGORY_OBJECT_KEY, categorySerialized)
+        startActivity(intent)
     }
 
     private fun setupRecyclerView(view: View) {
