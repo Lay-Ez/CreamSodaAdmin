@@ -27,4 +27,28 @@
     <string name="delete_menu_item">Delete</string>
     <string name="edit_category_toolbar_title">Edit category</string>
 
+    <!-- New menu item activity -->
+    <string name="toolbar_title_new_menu_item">New menu item</string>
+    <string name="ingredients_hint">Ingredients</string>
+    <string name="tags_hint">Tags</string>
+    <string name="price_hint">Price</string>
+    <string name="weight_hint">Weight</string>
+    <string name="volume_hint">Volume</string>
+
 </resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
