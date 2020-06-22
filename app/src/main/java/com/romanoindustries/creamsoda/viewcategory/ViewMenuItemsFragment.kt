@@ -1,7 +1,6 @@
 package com.romanoindustries.creamsoda.viewcategory
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.datamodel.MenuItem
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_TYPE_KEY
+import kotlinx.android.synthetic.main.fragment_food.*
 
 class ViewMenuItemsFragment : Fragment() {
     private val TAG = "ViewCategoryFragment"
@@ -22,17 +22,21 @@ class ViewMenuItemsFragment : Fragment() {
     private lateinit var viewModel: ViewMenuItemsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_view_category, container, false)
+        return inflater.inflate(R.layout.fragment_view_menu_items, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
-            setupViewModel(bundle)
+            parseBundle(bundle)
         }
     }
 
-    private fun setupViewModel(bundle: Bundle) {
+    private fun displayMenuCategory(menuCategory: MenuCategory) {
+        toolbar.title = menuCategory.name
+    }
+
+    private fun parseBundle(bundle: Bundle) {
         val categoryType = bundle.getString(CATEGORY_TYPE_KEY)
         val passedCategory = Gson()
             .fromJson(bundle.getString(CATEGORY_OBJECT_KEY), MenuCategory::class.java)
@@ -45,6 +49,8 @@ class ViewMenuItemsFragment : Fragment() {
                 displayMenuItems(it)
             })
         }
+
+        displayMenuCategory(passedCategory)
     }
 
     private fun displayMenuItems(menuItems: List<MenuItem>) {
