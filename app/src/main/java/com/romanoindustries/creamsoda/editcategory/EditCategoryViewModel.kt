@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
+import java.lang.Exception
 import javax.inject.Inject
 
 class EditCategoryViewModel: ViewModel() {
@@ -154,11 +155,9 @@ class EditCategoryViewModel: ViewModel() {
 
     fun deleteCurrentImage() {
         if (imageName != initialCategory.imageName) {
-            GlobalScope.launch {
-                withTimeout(10000L) {
-                    storageReference.child(imageName).delete()
-                }
-            }
+            try {
+                storageReference.child(imageName).delete()
+            } catch (e: Exception) {}
         }
     }
 

@@ -15,9 +15,7 @@ import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.menurepository.MenuRepository
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import java.lang.Exception
 import javax.inject.Inject
 
 const val ERROR_UPLOADING_IMAGE = 1
@@ -121,11 +119,9 @@ open class NewCategoryViewModel : ViewModel() {
 
     fun deleteCurrentImage() {
         if (imageName.isNotBlank()) {
-            GlobalScope.launch {
-                withTimeout(10000L) {
-                    storageReference.child(imageName).delete()
-                }
-            }
+            try {
+                storageReference.child(imageName).delete()
+            } catch (e: Exception) {}
         }
     }
 
