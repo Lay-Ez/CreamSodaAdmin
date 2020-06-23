@@ -16,14 +16,11 @@ import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_new_menu_item.*
-import kotlinx.android.synthetic.main.activity_new_menu_item_inner.image_button_add_photo
-import kotlinx.android.synthetic.main.activity_new_menu_item_inner.image_view_preview
-import kotlinx.android.synthetic.main.activity_new_menu_item_inner.progress_bar_save
-import kotlinx.android.synthetic.main.activity_new_menu_item_inner.progress_bar_upload
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.*
 
 class NewMenuItemActivity : AppCompatActivity() {
 
-    lateinit var viewModel: NewMenuItemViewModel
+    private lateinit var viewModel: NewMenuItemViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +44,7 @@ class NewMenuItemActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        viewModel.imageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }
@@ -117,5 +115,10 @@ class NewMenuItemActivity : AppCompatActivity() {
         val repositoryComponent = (application as MyApp).repositoryComponent
         viewModel = ViewModelProvider(this).get(NewMenuItemViewModel::class.java)
         viewModel.setupValues(repositoryComponent, categoryType, passedCategory)
+        if (categoryType == CATEGORY_FOOD) {
+            text_input_weight.hint = getString(R.string.weight_hint)
+        } else {
+            text_input_weight.hint = getString(R.string.volume_hint)
+        }
     }
 }

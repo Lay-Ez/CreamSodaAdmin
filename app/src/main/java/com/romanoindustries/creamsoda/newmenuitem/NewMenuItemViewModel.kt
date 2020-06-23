@@ -18,17 +18,12 @@ import com.romanoindustries.creamsoda.newcategory.ERROR_UPLOADING_IMAGE
 import com.romanoindustries.creamsoda.newcategory.STATE_DEFAULT
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 
 class NewMenuItemViewModel: ViewModel() {
 
-    private val TAG = "NewMenuItemViewModel"
-
-    lateinit var storageReference: StorageReference
-    lateinit var menuRepo: MenuRepository
-    lateinit var menuCategory: MenuCategory
+    private lateinit var storageReference: StorageReference
+    private lateinit var menuRepo: MenuRepository
+    private lateinit var menuCategory: MenuCategory
 
     private val imageUrlMutable: MutableLiveData<String> = MutableLiveData()
     val imageUrl: LiveData<String> = imageUrlMutable
