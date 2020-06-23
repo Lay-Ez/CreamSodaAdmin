@@ -51,6 +51,25 @@ class NewMenuItemActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.setOnMenuItemClickListener {menuItem ->
+            when (menuItem.itemId) {
+                R.id.mnu_item_save -> {
+                    onSavePressed()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun onSavePressed() {
+        if (isInputCorrect()) {
+
+        }
+    }
+
+    private fun isInputCorrect(): Boolean {
+        return true
     }
 
     private fun observeViewModel() {
@@ -122,3 +141,19 @@ class NewMenuItemActivity : AppCompatActivity() {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

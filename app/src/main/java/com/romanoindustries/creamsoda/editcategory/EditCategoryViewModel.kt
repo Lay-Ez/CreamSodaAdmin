@@ -6,7 +6,6 @@ import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
@@ -16,9 +15,6 @@ import com.romanoindustries.creamsoda.menurepository.MenuRepository
 import com.romanoindustries.creamsoda.newcategory.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -116,12 +112,8 @@ class EditCategoryViewModel: ViewModel() {
             this.imageUrl = imageUrl!!
         }
         initialCategory.imageName = imageName
-        if (imageName != initialImageName) {
-            GlobalScope.launch {
-                withTimeout(10000L) {
-                    storageReference.child(initialImageName).delete()
-                }
-            }
+        if (imageName != initialImageName && imageName.isNotBlank()) {
+            storageReference.child(initialImageName).delete()
         }
         menuRepo.updateMenuCategory(initialCategory)
             .subscribe({

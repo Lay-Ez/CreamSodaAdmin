@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
+import com.romanoindustries.creamsoda.helpers.textChanges
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.core.Observable
@@ -76,7 +77,7 @@ class EditCategoryActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        val dispose = getNameChanges().subscribe {
+        val dispose = edit_text_name.textChanges().subscribe {
             text_view_name.text = it
             text_input_layout_name.error = null
         }
@@ -158,19 +159,6 @@ class EditCategoryActivity : AppCompatActivity() {
             type = "image/*"
             action = Intent.ACTION_GET_CONTENT
             startActivityForResult(this, PICK_IMAGE_REQUEST)
-        }
-    }
-
-    private fun getNameChanges(): Observable<String> {
-        return Observable.create { subscriber ->
-            edit_text_name.addTextChangedListener( object: TextWatcher {
-                override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    subscriber.onNext(s.toString())
-                }
-            })
         }
     }
 

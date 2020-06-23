@@ -98,7 +98,9 @@ class NewMenuItemViewModel: ViewModel() {
 
     fun deleteCurrentImage() {
         if (imageName.isNotBlank()) {
-            storageReference.child(imageName).delete()
+            try {
+                storageReference.child(imageName).delete()
+            } catch (e: Exception) {}
         }
     }
 }
