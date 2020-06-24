@@ -6,16 +6,18 @@
     android:layout_height="wrap_content"
     android:layout_margin="16dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent">
 
             <ImageView
                 android:id="@+id/image_view"
@@ -59,7 +61,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:text="TextView" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textSize="16sp"
+                    tools:text="Tag Three" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -69,6 +73,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@android:color/transparent"
+                android:visibility="visible"
                 app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="@dimen/tag_card_corner_radius"
                 app:cardElevation="0dp"
@@ -81,7 +86,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:text="TextView" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textSize="16sp"
+                    tools:text="Tag Two" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -103,7 +110,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:text="TextView" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textSize="16sp"
+                    tools:text="Tag One" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -124,11 +133,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Perfect sushi combo for one or a family"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_name"
                 app:layout_constraintStart_toStartOf="@+id/text_view_name"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_name" />
+                app:layout_constraintTop_toBottomOf="@+id/text_view_name"
+                tools:text="Perfect sushi combo for one or a family" />
 
             <TextView
                 android:id="@+id/text_view_ingredients"
@@ -146,8 +155,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/currency_label"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_ingredients"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_ingredients" />
 
@@ -172,7 +183,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/text_view_price" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/text_view_weight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
@@ -181,16 +192,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/text_view_weight_label"
                 tools:text="250" />
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="377dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
