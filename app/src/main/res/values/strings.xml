@@ -2,6 +2,9 @@
     <string name="app_name">CreamSoda</string>
 
     <string name="unknown_error_occurred">Error occurred</string>
+    <string name="currency_label">р</string>
+    <string name="weight_label">гр</string>
+    <string name="volume_label">ml</string>
 
     <!-- Bottom navigation-->
     <string name="menu_bottom_navigation">Food</string>

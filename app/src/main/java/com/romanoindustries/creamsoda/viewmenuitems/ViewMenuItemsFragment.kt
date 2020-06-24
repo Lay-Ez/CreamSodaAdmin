@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_food.toolbar
 import kotlinx.android.synthetic.main.fragment_view_menu_items.*
 
 class ViewMenuItemsFragment : Fragment() {
-    private val TAG = "ViewCategoryFragment"
+    private val TAG = "ViewMenuItemsFragment"
 
     private lateinit var viewModel: ViewMenuItemsViewModel
     private lateinit var menuCategory: MenuCategory
