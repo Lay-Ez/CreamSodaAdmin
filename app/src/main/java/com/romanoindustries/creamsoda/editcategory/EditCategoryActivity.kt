@@ -169,7 +169,7 @@ class EditCategoryActivity : AppCompatActivity() {
             ERROR_IMAGE_NOT_LOADED -> msgResource =  R.string.error_image_not_uploaded
             ERROR_SAVING_CATEGORY -> msgResource =  R.string.error_saving_category
             ERROR_EMPTY_NAME -> {
-                text_input_layout_name.error = getString(R.string.error_empty_name)
+                text_input_layout_name.error = getString(R.string.error_empty_field)
                 return
             }
             else -> msgResource = R.string.unknown_error_occurred

@@ -12,10 +12,9 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.romanoindustries.creamsoda.RepositoryComponent
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
+import com.romanoindustries.creamsoda.datamodel.MenuItem
 import com.romanoindustries.creamsoda.menurepository.MenuRepository
-import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
-import com.romanoindustries.creamsoda.newcategory.ERROR_UPLOADING_IMAGE
-import com.romanoindustries.creamsoda.newcategory.STATE_DEFAULT
+import com.romanoindustries.creamsoda.newcategory.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
@@ -82,6 +81,28 @@ class NewMenuItemViewModel: ViewModel() {
             .addOnCompleteListener{
                 isLoadingMutable.value = false
             }
+    }
+
+    fun saveItem(name: String,
+                 ingredients: String,
+                 description: String,
+                 price: Int,
+                 weight: Int,
+                 tags: List<String>) {
+        val imageUrl = imageUrl.value
+        if (imageUrl == null || imageUrl.length < 5 || imageName.isEmpty()) {
+            errorChannelSubject.onNext(ERROR_IMAGE_NOT_LOADED)
+            return
+        }
+        stateMutable.value = STATE_SAVING
+        val newMenuItem = MenuItem(name, ingredients, description, imageUrl, imageName, price, weight, tags)
+        menuRepo.insertMenuItem(menuCategory, newMenuItem)
+            .subscribe({
+                stateMutable.value = STATE_SAVED
+            }, {
+                errorChannelSubject.onNext(ERROR_SAVING_CATEGORY)
+                stateMutable.value = STATE_DEFAULT
+            })
     }
 
     private fun getFileExtension(uri: Uri, contentResolver: ContentResolver): String? {

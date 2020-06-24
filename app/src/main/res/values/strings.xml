@@ -20,8 +20,11 @@
 
     <string name="error_uploading_image">Error uploading image</string>
     <string name="error_image_not_uploaded">Image not uploaded</string>
-    <string name="error_empty_name">Name cannot be empty</string>
     <string name="error_saving_category">Error saving category</string>
+
+    <string name="error_empty_field">Field cannot be empty</string>
+    <string name="error_incorrect_format">Incorrect format</string>
+    <string name="error_cannot_be_zero">Cannot be zero</string>
 
     <!-- Edit category activity -->
     <string name="delete_menu_item">Delete</string>

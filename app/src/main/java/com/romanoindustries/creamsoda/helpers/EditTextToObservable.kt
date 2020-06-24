@@ -17,3 +17,7 @@ fun EditText.textChanges() : Observable<String> {
         })
     }
 }
+
+fun EditText.trimmedText(): String {
+    return text.toString().trim()
+}

@@ -13,14 +13,19 @@ import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
+import com.romanoindustries.creamsoda.helpers.textChanges
+import com.romanoindustries.creamsoda.helpers.trimmedText
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_new_menu_item.*
 import kotlinx.android.synthetic.main.activity_new_menu_item_inner.*
+import java.lang.NumberFormatException
 
 class NewMenuItemActivity : AppCompatActivity() {
 
     private lateinit var viewModel: NewMenuItemViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +54,11 @@ class NewMenuItemActivity : AppCompatActivity() {
         viewModel.deleteCurrentImage()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
     private fun setupListeners() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
         toolbar.setOnMenuItemClickListener {menuItem ->
@@ -60,16 +70,117 @@ class NewMenuItemActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        hideAllTags()
+        edit_text_tags.textChanges().subscribe {text ->
+            val tagsList = text.trim().split(",")
+            tagsList.forEach { it.trim() }
+            hideAllTags()
+            for (i in tagsList.indices) {
+                when (i) {
+                    0 -> {
+                        card_view_tag_3.visibility = View.VISIBLE
+                        text_view_tag_3.visibility = View.VISIBLE
+                        text_view_tag_3.text = tagsList[i]
+                    }
+                    1 -> {
+                        card_view_tag_2.visibility = View.VISIBLE
+                        text_view_tag_2.visibility = View.VISIBLE
+                        text_view_tag_2.text = tagsList[i]
+                    }
+                    2 -> {
+                        card_view_tag_1.visibility = View.VISIBLE
+                        text_view_tag_1.visibility = View.VISIBLE
+                        text_view_tag_1.text = tagsList[i]
+                    }
+                }
+            }
+        }.also { compositeDisposable.add(it) }
+
+        edit_text_name.textChanges()
+            .subscribe { text_input_name.error = null }.also { compositeDisposable.add(it) }
+        edit_text_description.textChanges()
+            .subscribe { text_input_description.error = null }.also { compositeDisposable.add(it) }
+        edit_text_ingredients.textChanges()
+            .subscribe { text_input_ingredients.error = null }.also { compositeDisposable.add(it) }
+        edit_text_weight.textChanges()
+            .subscribe { text_input_weight.error = null }.also { compositeDisposable.add(it) }
+        edit_text_price.textChanges()
+            .subscribe { text_input_price.error = null }.also { compositeDisposable.add(it) }
+    }
+
+    private fun hideAllTags() {
+        card_view_tag_1.visibility = View.INVISIBLE
+        card_view_tag_2.visibility = View.INVISIBLE
+        card_view_tag_3.visibility = View.INVISIBLE
+        text_view_tag_1.visibility = View.INVISIBLE
+        text_view_tag_2.visibility = View.INVISIBLE
+        text_view_tag_3.visibility = View.INVISIBLE
     }
 
     private fun onSavePressed() {
         if (isInputCorrect()) {
-
+            loadInputToViewModel()
         }
     }
 
+    private fun loadInputToViewModel() {
+        val name = edit_text_name.trimmedText()
+        val description = edit_text_description.trimmedText()
+        val ingredients = edit_text_ingredients.trimmedText()
+        val weight = edit_text_weight.trimmedText().toInt()
+        val price = edit_text_price.trimmedText().toInt()
+        var tagsList = edit_text_tags.trimmedText().split(",")
+        tagsList.forEach { it.trim() }
+        if (tagsList.size > 3) {
+            tagsList = tagsList.subList(0, 3)
+        }
+        viewModel.saveItem(name, ingredients, description, price, weight, tagsList)
+    }
+
     private fun isInputCorrect(): Boolean {
-        return true
+        var inputCorrect = true
+        val name = edit_text_name.trimmedText()
+        val description = edit_text_description.trimmedText()
+        val ingredients = edit_text_ingredients.trimmedText()
+        val weightStr = edit_text_weight.trimmedText()
+        val priceStr = edit_text_price.trimmedText()
+
+        if (name.isBlank()) {
+            inputCorrect = false
+            text_input_name.error = getString(R.string.error_empty_field)
+        }
+        if (description.isBlank()) {
+            inputCorrect = false
+            text_input_description.error = getString(R.string.error_empty_field)
+        }
+        if (ingredients.isBlank()) {
+            inputCorrect = false
+            text_input_ingredients.error = getString(R.string.error_empty_field)
+        }
+
+        try {
+            val weight = weightStr.toInt()
+            if (weight <= 0) {
+                text_input_weight.error = getString(R.string.error_incorrect_format)
+                inputCorrect = false
+            }
+        } catch (e: NumberFormatException) {
+            text_input_weight.error = getString(R.string.error_incorrect_format)
+            inputCorrect = false
+        }
+
+        try {
+            val price = priceStr.toInt()
+            if (price <= 0) {
+                text_input_price.error = getString(R.string.error_incorrect_format)
+                inputCorrect = false
+            }
+        } catch (e: NumberFormatException) {
+            text_input_price.error = getString(R.string.error_incorrect_format)
+            inputCorrect = false
+        }
+
+        return inputCorrect
     }
 
     private fun observeViewModel() {
@@ -101,7 +212,7 @@ class NewMenuItemActivity : AppCompatActivity() {
                 else ->  R.string.unknown_error_occurred
             }
             Snackbar.make(toolbar, errorMsgResource, Snackbar.LENGTH_LONG).show()
-        }
+        }.also { compositeDisposable.add(it) }
 
         viewModel.uploadProgress.observe(this, Observer { progress ->
             progress_bar_upload.progress = progress
