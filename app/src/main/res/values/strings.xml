@@ -41,6 +41,8 @@
     <string name="weight_hint">Weight</string>
     <string name="volume_hint">Volume</string>
 
+    <string name="toolbar_title_edit_menu_item">Edit menu item</string>
+
 </resources>
 
 

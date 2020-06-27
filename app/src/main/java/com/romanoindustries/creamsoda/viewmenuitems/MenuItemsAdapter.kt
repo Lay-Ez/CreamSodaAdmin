@@ -12,7 +12,9 @@ import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuItem
 import com.squareup.picasso.Picasso
 
-class MenuItemsAdapter(var menuItems: List<MenuItem>): RecyclerView.Adapter<MenuItemsAdapter.MenuItemViewHolder>() {
+class MenuItemsAdapter(var menuItems: List<MenuItem>,
+                       val clickListener: MenuItemClickListener):
+    RecyclerView.Adapter<MenuItemsAdapter.MenuItemViewHolder>() {
 
     fun updateMenuItems(menuItems: List<MenuItem>) {
         this.menuItems = menuItems
@@ -22,7 +24,7 @@ class MenuItemsAdapter(var menuItems: List<MenuItem>): RecyclerView.Adapter<Menu
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.menu_item_list_item, parent, false)
-        return MenuItemViewHolder(view)
+        return MenuItemViewHolder(view, clickListener)
     }
 
     override fun getItemCount(): Int = menuItems.size
@@ -31,7 +33,8 @@ class MenuItemsAdapter(var menuItems: List<MenuItem>): RecyclerView.Adapter<Menu
         holder.bind(menuItems[position])
     }
 
-    class MenuItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class MenuItemViewHolder(itemView: View, val clickListener: MenuItemClickListener):
+        RecyclerView.ViewHolder(itemView) {
 
         private var imageView: ImageView = itemView.findViewById(R.id.image_view)
         private var editBtn: ImageButton = itemView.findViewById(R.id.image_btn_edit)
@@ -61,6 +64,7 @@ class MenuItemsAdapter(var menuItems: List<MenuItem>): RecyclerView.Adapter<Menu
             textViewWeight.text = menuItem.weight.toString()
             textViewPrice.text = menuItem.price.toString()
             displayTags(menuItem.tags)
+            editBtn.setOnClickListener{ clickListener.onMenuItemEditClicked(adapterPosition) }
         }
 
         private fun displayTags(tags: List<String>) {
@@ -87,6 +91,10 @@ class MenuItemsAdapter(var menuItems: List<MenuItem>): RecyclerView.Adapter<Menu
             cardViewTag2.visibility = View.INVISIBLE
             cardViewTag3.visibility = View.INVISIBLE
         }
+    }
+
+    interface MenuItemClickListener {
+        fun onMenuItemEditClicked(position: Int)
     }
 }
 

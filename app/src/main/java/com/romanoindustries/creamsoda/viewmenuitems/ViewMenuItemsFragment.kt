@@ -16,12 +16,14 @@ import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.datamodel.MenuItem
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
+import com.romanoindustries.creamsoda.editmenuitem.EditMenuItemActivity
+import com.romanoindustries.creamsoda.editmenuitem.MENU_ITEM_OBJECT_KEY
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_FOOD
 import com.romanoindustries.creamsoda.newcategory.CATEGORY_TYPE_KEY
 import com.romanoindustries.creamsoda.newmenuitem.NewMenuItemActivity
 import kotlinx.android.synthetic.main.fragment_view_menu_items.*
 
-class ViewMenuItemsFragment : Fragment() {
+class ViewMenuItemsFragment : Fragment(), MenuItemsAdapter.MenuItemClickListener {
     private val TAG = "ViewMenuItemsFragment"
 
     private lateinit var viewModel: ViewMenuItemsViewModel
@@ -41,8 +43,18 @@ class ViewMenuItemsFragment : Fragment() {
         }
     }
 
+    override fun onMenuItemEditClicked(position: Int) {
+        val menuItemToEdit = adapter.menuItems[position]
+        with(Intent(requireContext(), EditMenuItemActivity::class.java)) {
+            putExtra(CATEGORY_TYPE_KEY, categoryType)
+            putExtra(CATEGORY_OBJECT_KEY, Gson().toJson(menuCategory, MenuCategory::class.java))
+            putExtra(MENU_ITEM_OBJECT_KEY, Gson().toJson(menuItemToEdit, MenuItem::class.java))
+            startActivity(this)
+        }
+    }
+
     private fun setupRecyclerView() {
-        adapter = MenuItemsAdapter(arrayListOf())
+        adapter = MenuItemsAdapter(arrayListOf(), this)
         recycler_view.adapter = adapter
         recycler_view.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
