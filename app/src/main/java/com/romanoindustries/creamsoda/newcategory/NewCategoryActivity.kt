@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +13,6 @@ import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.RepositoryComponent
 import com.romanoindustries.creamsoda.helpers.textChanges
 import com.squareup.picasso.Picasso
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_new_category.*
 import kotlinx.android.synthetic.main.activity_new_category_inner.*
@@ -51,7 +48,7 @@ class NewCategoryActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        viewModel.imageUrl.removeObservers(this)
+        viewModel.uploadedImageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }
@@ -87,12 +84,12 @@ class NewCategoryActivity : AppCompatActivity() {
             onBackPressed()
         } else {
             repositoryComponent.inject(viewModel)
-            viewModel.setCorrectRepository(repositoryComponent, category)
+            viewModel.initValues(repositoryComponent, category)
         }
-        viewModel.imageUrl.observe(this, Observer {url ->
+        viewModel.uploadedImageUrl.observe(this, Observer { url ->
             Picasso.get().load(url).into(image_view_preview)
         })
-        viewModel.isLoading.observe(this, Observer { uploading ->
+        viewModel.isUploadingImage.observe(this, Observer { uploading ->
             if (uploading) {
                 displayUploadingImageState()
             } else {
@@ -100,7 +97,7 @@ class NewCategoryActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.uploadProgress.observe(this, Observer {progress ->
+        viewModel.imageUploadProgress.observe(this, Observer { progress ->
             if (progress <= 10) {
                 progress_bar_upload.progress = 10
             } else {

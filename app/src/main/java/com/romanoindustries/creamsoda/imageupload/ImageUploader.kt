@@ -30,7 +30,8 @@ class ImageUploader @Inject constructor(var storageReference: StorageReference) 
         cancelImageUpload()
         deleteCurrentImage()
         imageName = "${System.currentTimeMillis()}.${getFileExtension(imageUri, contentResolver)}"
-        return storageReference.child(imageName).putFile(imageUri)
+        isLoadingMutable.value = true
+        val uploadTask = storageReference.child(imageName).putFile(imageUri)
             .addOnSuccessListener {taskSnapshot ->
                 val taskUri = taskSnapshot.storage.downloadUrl
                 taskUri.addOnSuccessListener {
@@ -44,6 +45,8 @@ class ImageUploader @Inject constructor(var storageReference: StorageReference) 
             .addOnCompleteListener{
                 isLoadingMutable.value = false
             }
+        currentTask = uploadTask
+        return uploadTask
     }
 
     fun cancelImageUpload() {
