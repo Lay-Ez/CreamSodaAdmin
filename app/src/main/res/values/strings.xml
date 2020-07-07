@@ -42,6 +42,9 @@
     <string name="volume_hint">Volume</string>
 
     <string name="toolbar_title_edit_menu_item">Edit menu item</string>
+    <string name="weight_input_helper">In grams</string>
+    <string name="volume_input_helper">In milliliters</string>
+    <string name="rubles_helper">In rubles</string>
 
 </resources>
 
