@@ -51,10 +51,14 @@ open class NewCategoryViewModel : ViewModel() {
     }
 
     fun uploadImage(imageUri: Uri, contentResolver: ContentResolver) {
-        imageUploader.uploadImage(imageUri, contentResolver)
-            .addOnFailureListener {
-                errorChannelSubject.onNext(ERROR_UPLOADING_IMAGE)
-            }
+        imageUploader.run {
+            cancelImageUpload()
+            deleteCurrentImage()
+            uploadImage(imageUri, contentResolver)
+                .addOnFailureListener {
+                    errorChannelSubject.onNext(ERROR_UPLOADING_IMAGE)
+                }
+        }
     }
 
     fun cancelImageUpload() {

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +15,6 @@ import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.helpers.textChanges
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_new_category.*
 import kotlinx.android.synthetic.main.activity_new_category_inner.*
@@ -50,25 +47,26 @@ class EditCategoryActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        viewModel.imageUrl.removeObservers(this)
+        viewModel.uploadedImageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }
 
     private fun processIntent(intent: Intent) {
+        //checking if values initialized here for performance reasons
         if (!viewModel.valuesInitialized) {
-            val passedCategory = intent.getStringExtra(CATEGORY_OBJECT_KEY)
-            val menuCategory = Gson().fromJson(passedCategory, MenuCategory::class.java)
-            viewModel.initValues(menuCategory)
-
-            val repositoryComponent = (application as MyApp).repositoryComponent
             val category = intent.getStringExtra(CATEGORY_TYPE_KEY)
             if (category != null) {
+                val repositoryComponent = (application as MyApp).repositoryComponent
                 viewModel.setCorrectRepository(repositoryComponent, category)
             } else {
                 Snackbar.make(toolbar, R.string.unknown_error_occurred, Snackbar.LENGTH_LONG).show()
                 onBackPressed()
             }
+            val passedCategory = intent.getStringExtra(CATEGORY_OBJECT_KEY)
+            val menuCategory = Gson().fromJson(passedCategory, MenuCategory::class.java)
+            viewModel.initValues(menuCategory)
+
 
             edit_text_name.setText(menuCategory.name)
             edit_text_description.setText(menuCategory.description)
@@ -108,11 +106,11 @@ class EditCategoryActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.imageUrl.observe(this, Observer {imageUrl ->
+        viewModel.uploadedImageUrl.observe(this, Observer { imageUrl ->
             Picasso.get().load(imageUrl).into(image_view_preview)
         })
 
-        viewModel.isLoading.observe(this, Observer { uploading ->
+        viewModel.isImageUploading.observe(this, Observer { uploading ->
             if (uploading) {
                 displayUploadingImageState()
             } else {
@@ -120,7 +118,7 @@ class EditCategoryActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.uploadProgress.observe(this, Observer {progress ->
+        viewModel.imageUploadProgress.observe(this, Observer { progress ->
             if (progress <= 10) {
                 progress_bar_upload.progress = 10
             } else {

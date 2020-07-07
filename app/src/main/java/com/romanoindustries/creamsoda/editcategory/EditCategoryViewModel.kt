@@ -2,15 +2,13 @@ package com.romanoindustries.creamsoda.editcategory
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.StorageTask
-import com.google.firebase.storage.UploadTask
 import com.romanoindustries.creamsoda.RepositoryComponent
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
+import com.romanoindustries.creamsoda.imageupload.ImageUploader
 import com.romanoindustries.creamsoda.menurepository.MenuRepository
 import com.romanoindustries.creamsoda.newcategory.*
 import io.reactivex.rxjava3.core.Observable
@@ -23,25 +21,20 @@ class EditCategoryViewModel: ViewModel() {
     @Inject
     lateinit var storageReference: StorageReference
 
+    @Inject
+    lateinit var imageUploader: ImageUploader
+
     private lateinit var menuRepo: MenuRepository
 
-    private val imageUrlMutable: MutableLiveData<String> = MutableLiveData()
-    val imageUrl: LiveData<String> = imageUrlMutable
-
-    private val uploadProgressMutable: MutableLiveData<Int> = MutableLiveData(0)
-    val uploadProgress: LiveData<Int> = uploadProgressMutable
-
-    private val isLoadingMutable: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = isLoadingMutable
+    lateinit var uploadedImageUrl: LiveData<String>
+    lateinit var imageUploadProgress: LiveData<Int>
+    lateinit var isImageUploading: LiveData<Boolean>
 
     private val errorChannelSubject = PublishSubject.create<Int>()
     val errorChannel: Observable<Int> = errorChannelSubject
 
     private val stateMutable = MutableLiveData<Int>(STATE_DEFAULT)
     val state: LiveData<Int> = stateMutable
-
-    private var currentTask: StorageTask<UploadTask.TaskSnapshot>? = null
-    private var imageName = ""
 
     lateinit var initialCategory: MenuCategory
     var valuesInitialized = false
@@ -57,34 +50,22 @@ class EditCategoryViewModel: ViewModel() {
 
     fun initValues(menuCategory: MenuCategory) {
         menuCategory.let {
-            imageUrlMutable.value = it.imageUrl
-            imageName = it.imageName
+            imageUploader.setInitialValues(it.imageName, it.imageUrl)
             initialCategory = it
+        }
+        imageUploader.let {
+            uploadedImageUrl = it.imageUrl
+            imageUploadProgress = it.uploadProgress
+            isImageUploading = it.isLoading
         }
     }
 
     fun uploadImage(imageUri: Uri, contentResolver: ContentResolver) {
         cancelImageUpload()
         deleteCurrentImage()
-        isLoadingMutable.value = true
-        imageName = "${System.currentTimeMillis()}.${getFileExtension(imageUri, contentResolver)}"
-        currentTask = storageReference.child(imageName)
-            .putFile(imageUri)
-            .addOnSuccessListener {taskSnapshot ->
-                val taskUri = taskSnapshot.storage.downloadUrl
-                taskUri.addOnSuccessListener {
-                    imageUrlMutable.value = it.toString()
-                }
-            }
+        imageUploader.uploadImage(imageUri, contentResolver)
             .addOnFailureListener {
                 errorChannelSubject.onNext(ERROR_UPLOADING_IMAGE)
-            }
-            .addOnProgressListener {
-                val progress = (100.00 * it.bytesTransferred / it.totalByteCount)
-                uploadProgressMutable.value = progress.toInt()
-            }
-            .addOnCompleteListener{
-                isLoadingMutable.value = false
             }
     }
 
@@ -94,7 +75,7 @@ class EditCategoryViewModel: ViewModel() {
             isInputOk = false
             errorChannelSubject.onNext(ERROR_EMPTY_NAME)
         }
-        val imageUrl = imageUrl.value
+        val imageUrl = uploadedImageUrl.value
         if (imageUrl == null || imageUrl.length  <= 5) {
             isInputOk = false
             errorChannelSubject.onNext(ERROR_IMAGE_NOT_LOADED)
@@ -106,13 +87,14 @@ class EditCategoryViewModel: ViewModel() {
 
         stateMutable.value = STATE_SAVING
         val initialImageName = initialCategory.imageName
+        val currentImageName = imageUploader.imageName
         initialCategory.apply {
             this.name = name
             this.description = description
             this.imageUrl = imageUrl!!
         }
-        initialCategory.imageName = imageName
-        if (imageName != initialImageName && imageName.isNotBlank()) {
+        initialCategory.imageName = currentImageName
+        if (currentImageName != initialImageName && currentImageName.isNotBlank()) {
             storageReference.child(initialImageName).delete()
         }
         menuRepo.updateMenuCategory(initialCategory)
@@ -146,22 +128,15 @@ class EditCategoryViewModel: ViewModel() {
     }
 
     fun deleteCurrentImage() {
-        if (imageName != initialCategory.imageName) {
+        val currentImageName = imageUploader.imageName
+        if (currentImageName != initialCategory.imageName) {
             try {
-                storageReference.child(imageName).delete()
+                imageUploader.deleteCurrentImage()
             } catch (e: Exception) {}
         }
     }
 
     fun cancelImageUpload() {
-        currentTask?.cancel()
-        isLoadingMutable.value = false
-        uploadProgressMutable.value = 0
-        imageUrlMutable.value = "-" /* cannot set to empty - picasso will throw error*/
-    }
-
-    private fun getFileExtension(uri: Uri, contentResolver: ContentResolver): String? {
-        val mime = MimeTypeMap.getSingleton()
-        return mime.getExtensionFromMimeType(contentResolver.getType(uri))
+        imageUploader.cancelImageUpload()
     }
 }

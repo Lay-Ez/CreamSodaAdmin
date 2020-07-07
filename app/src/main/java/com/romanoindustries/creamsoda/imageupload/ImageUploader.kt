@@ -27,8 +27,6 @@ class ImageUploader @Inject constructor(var storageReference: StorageReference) 
     val isLoading: LiveData<Boolean> = isLoadingMutable
 
     fun uploadImage(imageUri: Uri, contentResolver: ContentResolver): StorageTask<UploadTask.TaskSnapshot> {
-        cancelImageUpload()
-        deleteCurrentImage()
         imageName = "${System.currentTimeMillis()}.${getFileExtension(imageUri, contentResolver)}"
         isLoadingMutable.value = true
         val uploadTask = storageReference.child(imageName).putFile(imageUri)
@@ -62,6 +60,11 @@ class ImageUploader @Inject constructor(var storageReference: StorageReference) 
                 storageReference.child(imageName).delete()
             } catch (e: Exception) {}
         }
+    }
+
+    fun setInitialValues(imageName: String, imageUrl: String) {
+        this.imageName = imageName
+        this.imageUrlMutable.value = imageUrl
     }
 
     private fun getFileExtension(uri: Uri, contentResolver: ContentResolver): String? {
