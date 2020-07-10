@@ -49,7 +49,7 @@ class NewMenuItemActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        viewModel.imageUrl.removeObservers(this)
+        viewModel.uploadedImageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }
@@ -184,7 +184,7 @@ class NewMenuItemActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.imageUrl.observe(this, Observer {imageUrl ->
+        viewModel.uploadedImageUrl.observe(this, Observer { imageUrl ->
             Picasso.get().load(imageUrl).into(image_view_preview)
         })
 
@@ -196,7 +196,7 @@ class NewMenuItemActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.isLoading.observe(this, Observer { uploading ->
+        viewModel.isUploadingImage.observe(this, Observer { uploading ->
             if (uploading) {
                 displayUploadingImageState()
             } else {
@@ -214,7 +214,7 @@ class NewMenuItemActivity : AppCompatActivity() {
             Snackbar.make(toolbar, errorMsgResource, Snackbar.LENGTH_LONG).show()
         }.also { compositeDisposable.add(it) }
 
-        viewModel.uploadProgress.observe(this, Observer { progress ->
+        viewModel.imageUploadProgress.observe(this, Observer { progress ->
             progress_bar_upload.progress = progress
         })
     }
@@ -244,7 +244,7 @@ class NewMenuItemActivity : AppCompatActivity() {
         val passedCategory = Gson().fromJson(intent.getStringExtra(CATEGORY_OBJECT_KEY), MenuCategory::class.java)
         val repositoryComponent = (application as MyApp).repositoryComponent
         viewModel = ViewModelProvider(this).get(NewMenuItemViewModel::class.java)
-        viewModel.setupValues(repositoryComponent, categoryType, passedCategory)
+        viewModel.initValues(repositoryComponent, categoryType, passedCategory)
         if (categoryType == CATEGORY_FOOD) {
             text_input_weight.hint = getString(R.string.weight_hint)
         } else {
