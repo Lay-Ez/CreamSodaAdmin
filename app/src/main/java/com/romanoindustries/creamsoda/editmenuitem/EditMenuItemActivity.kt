@@ -19,9 +19,7 @@ import com.romanoindustries.creamsoda.helpers.trimmedText
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_edit_menu_item.*
 import kotlinx.android.synthetic.main.activity_edit_menu_item.toolbar
-import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.*
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.card_view_tag_1
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.card_view_tag_2
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.card_view_tag_3
@@ -43,8 +41,6 @@ import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_input_w
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_1
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_2
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_3
-import kotlinx.android.synthetic.main.activity_new_menu_item.*
-import kotlinx.android.synthetic.main.activity_new_menu_item_inner.*
 import java.lang.NumberFormatException
 
 const val MENU_ITEM_OBJECT_KEY = "menu_item"
@@ -69,7 +65,7 @@ class EditMenuItemActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        viewModel.imageUrl.removeObservers(this)
+        viewModel.uploadedImageUrl.removeObservers(this)
         viewModel.cancelImageUpload()
         viewModel.deleteCurrentImage()
     }
@@ -245,7 +241,7 @@ class EditMenuItemActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.imageUrl.observe(this, Observer {imageUrl ->
+        viewModel.uploadedImageUrl.observe(this, Observer { imageUrl ->
             Picasso.get().load(imageUrl).into(image_view_preview)
         })
 
@@ -257,7 +253,7 @@ class EditMenuItemActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.isLoading.observe(this, Observer { uploading ->
+        viewModel.isImageUploading.observe(this, Observer { uploading ->
             if (uploading) {
                 displayUploadingImageState()
             } else {
@@ -275,7 +271,7 @@ class EditMenuItemActivity : AppCompatActivity() {
             Snackbar.make(toolbar, errorMsgResource, Snackbar.LENGTH_LONG).show()
         }.also { compositeDisposable.add(it) }
 
-        viewModel.uploadProgress.observe(this, Observer { progress ->
+        viewModel.imageUploadProgress.observe(this, Observer { progress ->
             progress_bar_upload.progress = progress
         })
     }
