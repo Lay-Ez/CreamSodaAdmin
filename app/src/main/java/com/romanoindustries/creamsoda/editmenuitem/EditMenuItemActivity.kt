@@ -14,6 +14,7 @@ import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.datamodel.MenuItem
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
+import com.romanoindustries.creamsoda.helpers.splitWithEmptyRemoved
 import com.romanoindustries.creamsoda.helpers.textChanges
 import com.romanoindustries.creamsoda.helpers.trimmedText
 import com.romanoindustries.creamsoda.newcategory.*
@@ -41,6 +42,7 @@ import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_input_w
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_1
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_2
 import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.text_view_tag_3
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.*
 import java.lang.NumberFormatException
 
 const val MENU_ITEM_OBJECT_KEY = "menu_item"
@@ -93,10 +95,9 @@ class EditMenuItemActivity : AppCompatActivity() {
         val ingredients = edit_text_ingredients.trimmedText()
         val weight = edit_text_weight.trimmedText().toInt()
         val price = edit_text_price.trimmedText().toInt()
-        var tagsList = edit_text_tags.trimmedText().split(",")
-        tagsList.forEach { it.trim() }
+        var tagsList = edit_text_tags.trimmedText().splitWithEmptyRemoved(",")
         if (tagsList.size > 3) {
-            tagsList = tagsList.subList(0, 3)
+            tagsList = tagsList.subList(0, 3) as ArrayList<String>
         }
         viewModel.saveItem(name, ingredients, description, price, weight, tagsList)
     }
@@ -165,8 +166,7 @@ class EditMenuItemActivity : AppCompatActivity() {
 
         hideAllTags()
         edit_text_tags.textChanges().subscribe {text ->
-            val tagsList = text.trim().split(",")
-            tagsList.forEach { it.trim() }
+            val tagsList = text.splitWithEmptyRemoved(",")
             hideAllTags()
             for (i in tagsList.indices) {
                 when (i) {

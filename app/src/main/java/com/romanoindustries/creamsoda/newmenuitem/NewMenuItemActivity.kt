@@ -13,13 +13,36 @@ import com.romanoindustries.creamsoda.MyApp
 import com.romanoindustries.creamsoda.R
 import com.romanoindustries.creamsoda.datamodel.MenuCategory
 import com.romanoindustries.creamsoda.editcategory.CATEGORY_OBJECT_KEY
+import com.romanoindustries.creamsoda.helpers.splitWithEmptyRemoved
 import com.romanoindustries.creamsoda.helpers.textChanges
 import com.romanoindustries.creamsoda.helpers.trimmedText
 import com.romanoindustries.creamsoda.newcategory.*
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_edit_menu_item_inner.*
 import kotlinx.android.synthetic.main.activity_new_menu_item.*
 import kotlinx.android.synthetic.main.activity_new_menu_item_inner.*
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.card_view_tag_1
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.card_view_tag_2
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.card_view_tag_3
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_description
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_ingredients
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_name
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_price
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_tags
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.edit_text_weight
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.image_button_add_photo
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.image_view_preview
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.progress_bar_save
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.progress_bar_upload
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_input_description
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_input_ingredients
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_input_name
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_input_price
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_input_weight
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_view_tag_1
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_view_tag_2
+import kotlinx.android.synthetic.main.activity_new_menu_item_inner.text_view_tag_3
 import java.lang.NumberFormatException
 
 class NewMenuItemActivity : AppCompatActivity() {
@@ -72,8 +95,7 @@ class NewMenuItemActivity : AppCompatActivity() {
         }
         hideAllTags()
         edit_text_tags.textChanges().subscribe {text ->
-            val tagsList = text.trim().split(",")
-            tagsList.forEach { it.trim() }
+            val tagsList = text.splitWithEmptyRemoved(",")
             hideAllTags()
             for (i in tagsList.indices) {
                 when (i) {
@@ -129,11 +151,7 @@ class NewMenuItemActivity : AppCompatActivity() {
         val ingredients = edit_text_ingredients.trimmedText()
         val weight = edit_text_weight.trimmedText().toInt()
         val price = edit_text_price.trimmedText().toInt()
-        var tagsList = edit_text_tags.trimmedText().split(",")
-        tagsList.forEach { it.trim() }
-        if (tagsList.size > 3) {
-            tagsList = tagsList.subList(0, 3)
-        }
+        val tagsList = edit_text_tags.trimmedText().splitWithEmptyRemoved(",")
         viewModel.saveItem(name, ingredients, description, price, weight, tagsList)
     }
 
