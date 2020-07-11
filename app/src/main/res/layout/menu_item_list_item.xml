@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
                     android:textSize="16sp"
                     tools:text="Tag Three" />
             </androidx.cardview.widget.CardView>
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
                     android:textSize="16sp"
                     tools:text="Tag Two" />
             </androidx.cardview.widget.CardView>
@@ -110,8 +110,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
                     tools:text="Tag One" />
             </androidx.cardview.widget.CardView>
 
@@ -122,7 +121,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:textAppearance="@style/TextAppearance.MyApp.MenuItemHeadline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_view"
@@ -133,7 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MyApp.Description"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_name"
                 app:layout_constraintStart_toStartOf="@+id/text_view_name"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_name"
@@ -144,7 +143,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textAppearance="@style/TextAppearance.MyApp.Ingredients"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_description"
                 app:layout_constraintStart_toStartOf="@+id/text_view_description"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_description"
@@ -158,6 +157,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/currency_label"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_ingredients"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_ingredients" />
@@ -166,8 +166,9 @@
                 android:id="@+id/text_view_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_marginEnd="2dp"
+                android:textAppearance="@style/TextAppearance.MyApp.Tag"
+                android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
                 app:layout_constraintEnd_toStartOf="@+id/textView4"
                 tools:text="350" />
@@ -179,6 +180,7 @@
                 android:layout_marginEnd="24dp"
                 android:text="@string/weight_label"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/text_view_price"
                 app:layout_constraintEnd_toStartOf="@+id/text_view_price" />
 
@@ -186,8 +188,9 @@
                 android:id="@+id/text_view_weight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_marginEnd="2dp"
+                android:textAppearance="@style/TextAppearance.MyApp.Tag"
+                android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/text_view_weight_label"
                 app:layout_constraintEnd_toStartOf="@+id/text_view_weight_label"
                 tools:text="250" />

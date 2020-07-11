@@ -89,9 +89,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textSize="16sp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -113,9 +113,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textSize="16sp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -137,9 +137,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_black"
                     android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textSize="16sp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.MyApp.Tag"
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
